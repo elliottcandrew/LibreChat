@@ -4,7 +4,7 @@ services:
     #   context: .
     #   dockerfile: Dockerfile.multi
     #   target: api-build
-    image: registry.librechat.ai/danny-avila/librechat-dev-api:latest
+    image: ghcr.io/danny-avila/librechat-dev-api:latest
     container_name: LibreChat-API
     ports:
       - 3080:3080
@@ -40,20 +40,20 @@ services:
       - ./logs:/app/api/logs
       - ./skill:/app/skill
 
-  admin-panel:
-    image: registry.librechat.ai/clickhouse/librechat-admin-panel:latest
-    container_name: admin-panel
-    depends_on:
-      - api
-    restart: always
-    environment:
-      - PORT=3000
-      # Plain expansion (not :?) so `docker compose down`/`pull` still run when this is unset.
-      # The panel itself refuses to start without it; set ADMIN_PANEL_SESSION_SECRET in .env.
-      - SESSION_SECRET=${ADMIN_PANEL_SESSION_SECRET}
-      - API_SERVER_URL=http://api:3080
-      - VITE_API_BASE_URL=${DOMAIN_CLIENT:-http://localhost}
-      - SESSION_COOKIE_SECURE=${ADMIN_PANEL_SESSION_COOKIE_SECURE:-false}
+  # admin-panel:
+  #   image: ghcr.io/clickhouse/librechat-admin-panel:latest
+  #   container_name: admin-panel
+  #   depends_on:
+  #     - api
+  #   restart: always
+  #   environment:
+  #     - PORT=3000
+  #     # Plain expansion (not :?) so `docker compose down`/`pull` still run when this is unset.
+  #     # The panel itself refuses to start without it; set ADMIN_PANEL_SESSION_SECRET in .env.
+  #     - SESSION_SECRET=${ADMIN_PANEL_SESSION_SECRET}
+  #     - API_SERVER_URL=http://api:3080
+  #     - VITE_API_BASE_URL=${DOMAIN_CLIENT:-http://localhost}
+  #     - SESSION_COOKIE_SECURE=${ADMIN_PANEL_SESSION_COOKIE_SECURE:-false}
 
   client:
     image: nginx:1.27.0-alpine
@@ -99,7 +99,7 @@ services:
     volumes:
       - pgdata2:/var/lib/postgresql/data
   rag_api:
-    image: registry.librechat.ai/danny-avila/librechat-rag-api-dev-lite:latest
+    image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:latest
     environment:
       - DB_HOST=vectordb
       - RAG_PORT=${RAG_PORT:-8000}
